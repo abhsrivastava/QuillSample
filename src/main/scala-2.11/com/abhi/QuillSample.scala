@@ -2,15 +2,15 @@ package com.abhi
 
 import java.util.UUID
 
-import io.getquill.CassandraSyncContext
-import io.getquill.SnakeCase
+import io.getquill._
+import io.getquill.dsl.MetaDsl
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by abhsrivastava on 11/10/16.
   */
 object QuillSample extends App {
-   lazy val ctx = new CassandraSyncContext[SnakeCase]("ctx")
+   lazy val ctx = new CassandraSyncContext[SnakeCase]("ctx") with SetEncoder with SetDecoder
    import ctx._
    val getAllRows = quote {
       query[Movies]
@@ -19,9 +19,10 @@ object QuillSample extends App {
    println(result)
 }
 
-case class Movies(uUID: UUID,
+case class Movies(uuid: UUID,
                   avgRating: Float,
                   genres: Set[String],
                   name: String,
                   releaseDate: java.util.Date,
-                  videoReleaseDate: java.util.Date)
+                  videoReleaseDate: java.util.Date) {
+}
